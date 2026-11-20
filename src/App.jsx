@@ -6,11 +6,14 @@ import Header from './Header.jsx'
 import {mock1} from "./constants/users.js"
 import Resultados from "./Resultados"
 import CONFIG from "./config/config"
+import Formulario from './Formulario'
 
 function App() {
   const [query, setQuery] = useState("")
 
   const[resultado, setResultado] = useState(null);
+
+  const[error, setError] = useState(null);
 
   const callServer = async (param) => {
     console.log("CLICK!");
@@ -36,6 +39,7 @@ function App() {
 
       } catch (error) {
         console.log(error)
+        setError({description: error.message})
       }
 
     } else {
@@ -49,11 +53,14 @@ function App() {
       <div className='App'>
         <Header/>
         <h2 id="buscador ">Buscador de usuarios</h2>
-        <input type="text" id="query" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Texto a buscar"/>
-        <button id="botonsearch" onClick={()=>callServer()}>Buscar</button>
+
+        <Formulario contenido={query}  setContenido={setQuery} callServer={callServer} />
+
         <button id="botonall" onClick={()=>callServer("all")}>Buscar Todos</button>
 
-      {resultado && <Resultados resultado={resultado} />}
+        {error && <h1>Ha habido un horror: {error.description}</h1> }
+
+        {resultado && <Resultados resultado={resultado} />}
 
       </div>
   );
